@@ -41,3 +41,6 @@ helm upgrade --install -n ingress ingress-nginx --repo https://kubernetes.github
   --set controller.metrics.serviceMonitor.enabled=true \
 
 kubectl -n ingress patch deployment ingress-nginx-controller --patch-file=nginx-ingress-patch.json
+
+# make your browswer happy by getting it to trust trustme.crt as a valid certificate authority
+kubectl get validatingwebhookconfiguration/ingress-nginx-admission -o jsonpath='{.webhooks[0].clientConfig.caBundle}' | base64 -d > trustme.crt
