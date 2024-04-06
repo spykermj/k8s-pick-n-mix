@@ -1,8 +1,9 @@
 ---
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
   name: selfsigned-issuer
+  namespace: cert-manager
 spec:
   selfSigned: {}
 ---
@@ -22,7 +23,7 @@ spec:
     size: 256
   issuerRef:
     name: selfsigned-issuer
-    kind: ClusterIssuer
+    kind: Issuer
     group: cert-manager.io
 ---
 apiVersion: cert-manager.io/v1
