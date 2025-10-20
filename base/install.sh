@@ -20,6 +20,9 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  - containerPort: 7070
+    hostPort: 7070
+    protocol: TCP
 EOF
 
 helm upgrade --install --create-namespace=true -n kps kps --repo https://prometheus-community.github.io/helm-charts kube-prometheus-stack \
@@ -30,17 +33,9 @@ helm -n cert-manager upgrade --install --create-namespace=true cert-manager --re
 kubectl create ns ingress
 kubectl apply -f certs.yaml
 
-helm upgrade --install -n ingress ingress-nginx --repo https://kubernetes.github.io/ingress-nginx ingress-nginx \
-  --repo https://kubernetes.github.io/ingress-nginx --wait \
-  --set controller.extraArgs.default-ssl-certificate="ingress/ingress-default" \
-  --set controller.service.type=NodePort \
-  --set controller.admissionWebhooks.certManager.enabled=true \
-  --set controller.admissionWebhooks.certManager.issuerRef.name=cluster-ca-issuer \
-  --set controller.admissionWebhooks.certManager.issuerRef.kind=ClusterIssuer \
-  --set controller.metrics.enabled=true \
-  --set controller.metrics.serviceMonitor.enabled=true \
+helm upgrade --install --create-namespace -n ingress haproxy haproxytech/kubernetes-ingress -f haproxy-values.yaml
 
 kubectl -n ingress patch deployment ingress-nginx-controller --patch-file=nginx-ingress-patch.json
 
 # make your browswer happy by getting it to trust trustme.crt as a valid certificate authority
-kubectl get validatingwebhookconfiguration/ingress-nginx-admission -o jsonpath='{.webhooks[0].clientConfig.caBundle}' | base64 -d > trustme.crt
+kubectl -n cert-manager get secret root-secret -o jsonpath='{.data.ca\.crt}' | base64 -d > trustme.crt

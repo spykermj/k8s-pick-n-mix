@@ -1,0 +1,17 @@
+---
+controller:
+  kind: DaemonSet
+
+  defaultTLSSecret:
+    enabled: true
+    secretNamespace: '{{ include "kubernetes-ingress.namespace" . }}'
+    secret: ingress-default
+  daemonset:
+    useHostPort: true
+    hostPorts:
+      fluentforward: 7070
+  serviceMonitor:
+    enabled: true
+  service:
+    enablePorts:
+      stat: false

@@ -1,27 +1,31 @@
 alertmanager:
   ingress:
     annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      haproxy.org/ssl-redirect: "true"
     enabled: true
+    ingressClassName: haproxy
     hosts:
       - alertmanager.spykerman.co.uk
-    ingressClassName: nginx
 grafana:
+  env:
+    GF_AUTH_ANONYMOUS_ENABLED: true
+    GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    GF_AUTH_DISABLE_LOGIN_FORM: true
   ingress:
     annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      haproxy.org/ssl-redirect: "true"
     enabled: true
+    ingressClassName: haproxy
     hosts:
       - grafana.spykerman.co.uk
-    ingressClassName: nginx
 prometheus:
   ingress:
     annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      haproxy.org/ssl-redirect: "true"
     enabled: true
+    ingressClassName: haproxy
     hosts:
       - prometheus.spykerman.co.uk
-    ingressClassName: nginx
   prometheusSpec:
     podMonitorNamespaceSelector:
       matchLabels: {}
