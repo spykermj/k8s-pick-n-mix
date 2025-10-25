@@ -35,7 +35,5 @@ kubectl apply -f certs.yaml
 
 helm upgrade --install --create-namespace -n ingress haproxy haproxytech/kubernetes-ingress -f haproxy-values.yaml
 
-kubectl -n ingress patch deployment ingress-nginx-controller --patch-file=nginx-ingress-patch.json
-
 # make your browswer happy by getting it to trust trustme.crt as a valid certificate authority
 kubectl -n cert-manager get secret root-secret -o jsonpath='{.data.ca\.crt}' | base64 -d > trustme.crt
