@@ -1,0 +1,18 @@
+apiVersion: ingress.v1.haproxy.org/v1
+kind: TCP
+metadata:
+  name: fluentd
+  annotations:
+    ingress.class: haproxy
+spec:
+  - name: fluentd
+    frontend:
+      name: fluentd
+      tcplog: true
+      enabled: true
+      binds:
+        - name: forward
+          port: 7070
+    service:
+      name: fluentd-pointless-fluentd
+      port: {{ .Values.service.port }}
