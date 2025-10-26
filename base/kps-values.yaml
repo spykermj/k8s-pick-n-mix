@@ -2,6 +2,8 @@ alertmanager:
   ingress:
     annotations:
       haproxy.org/ssl-redirect: "true"
+      haproxy.org/backend-config-snippet: |
+        http-request set-log-level silent
     enabled: true
     ingressClassName: haproxy
     hosts:
@@ -14,6 +16,8 @@ grafana:
   ingress:
     annotations:
       haproxy.org/ssl-redirect: "true"
+      haproxy.org/backend-config-snippet: |
+        http-request set-log-level silent
     enabled: true
     ingressClassName: haproxy
     hosts:
@@ -22,6 +26,8 @@ prometheus:
   ingress:
     annotations:
       haproxy.org/ssl-redirect: "true"
+      haproxy.org/backend-config-snippet: |
+        http-request set-log-level silent
     enabled: true
     ingressClassName: haproxy
     hosts:

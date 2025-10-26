@@ -2,6 +2,9 @@
 controller:
   kind: DaemonSet
 
+  config:
+    syslog-server: "address:stdout, format: raw, facility:daemon"
+
   defaultTLSSecret:
     enabled: true
     secretNamespace: '{{ include "kubernetes-ingress.namespace" . }}'
@@ -13,5 +16,14 @@ controller:
   serviceMonitor:
     enabled: true
   service:
+    annotations:
+      haproxy.org/backend-config-snippet: |
+        http-request set-log-level silent
     enablePorts:
       stat: false
+    tcpPorts:
+      - name: fluentd-forward
+        port: 7070
+        targetPort: 7070
+        nodePort: 30070
+        protocol: TCP
