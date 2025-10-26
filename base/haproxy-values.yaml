@@ -15,6 +15,11 @@ controller:
       fluentforward: 7070
   serviceMonitor:
     enabled: true
+    endpoints:
+      - port: stat
+        path: /metrics
+        scheme: http
+        interval: 5s
   service:
     annotations:
       haproxy.org/backend-config-snippet: |
